@@ -34,10 +34,41 @@ GROUP BY a.ABT_NR, a.ABT_BEZ
 
 Schreiben Sie ein Kommando, mit dem Sie für jede vorhandene Aufwandsentschädigung die Anzahl der Mitglieder angeben, die diese Aufwandsentschädigung erhalten. Mitglieder, die keine Aufwandsentschädigung erhalten, sollen mit Aufwandsentschädigung 0 berücksichtigt werden. Sortieren Sie fallend nach Aufwandsentschädigung.
 
+```sql
+SELECT NVL(m.MI_AUFENT, 0) AS AUFENT, COUNT(*)
+FROM mitglieder m
+GROUP BY m.MI_AUFENT
+ORDER BY AUFENT DESC
+```
+
 ## Aufgabe 4.5
 
 Berechnen Sie die Anzahl der Mitglieder, die andere Mitglieder koordinieren.
 
+```sql
+SELECT COUNT(COUNT(MIT_KOORD))
+FROM mitglieder
+WHERE MIT_KOORD IS NOT NULL
+GROUP BY MIT_KOORD
+```
+
 ## Aufgabe 4.6
 
-Schreiben Sie eine Abfrage, die den Unterschied zwischen der geringsten und der höchsten vorhandenen Aufwandsentschä- digung berechnet. Geben Sie den Wert unter der Spaltenbe- zeichnung "Unterschied" aus Aufgabe 4.7: Schreiben Sie eine Abfrage, die für die Koordinatoren den jeweils geringsten aktuellen Beitrag eines von ihm/ihr koordinierten Mitglieds anzeigt (dabei soll nur die jeweils nächste Hierarchie- stufe betrachtet werden). Mitglieder, die selbst nicht koordiniert werden, sollen ausgeschlossen werden
+Schreiben Sie eine Abfrage, die den Unterschied zwischen der geringsten und der höchsten vorhandenen Aufwandsentschädigung berechnet. Geben Sie den Wert unter der Spaltenbezeichnung "Unterschied" aus
+
+```sql
+SELECT MAX(MI_AUFENT) - MIN(MI_AUFENT) as Unterschied 
+FROM mitglieder
+```
+
+## Aufgabe 4.7
+
+Schreiben Sie eine Abfrage, die für die Koordinatoren den jeweils geringsten aktuellen Beitrag eines von ihm/ihr koordinierten Mitglieds anzeigt (dabei soll nur die jeweils nächste Hierarchie- stufe betrachtet werden). Mitglieder, die selbst nicht koordiniert werden, sollen ausgeschlossen werden
+
+```sql
+SELECT k.MI_NR, MIN(m.MI_BEITR_AKT)
+FROM mitglieder m, mitglieder k
+WHERE k.MI_NR = m.MIT_KOORD
+AND m.MIT_KOORD IS NOT NULL
+GROUP BY k.MI_NR
+```
