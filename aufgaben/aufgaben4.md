@@ -46,10 +46,8 @@ ORDER BY AUFENT DESC
 Berechnen Sie die Anzahl der Mitglieder, die andere Mitglieder koordinieren.
 
 ```sql
-SELECT COUNT(COUNT(MIT_KOORD))
+SELECT COUNT(DISTINCT(MIT_KOORD))
 FROM mitglieder
-WHERE MIT_KOORD IS NOT NULL
-GROUP BY MIT_KOORD
 ```
 
 ## Aufgabe 4.6
